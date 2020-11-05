@@ -12,7 +12,7 @@ class RandomAgent:
         action = np.random.choice(self.num_of_actions)
         return action
 
-
+# This is an agent
 class DeterministicAgent:
 
     def __init__(self, env):

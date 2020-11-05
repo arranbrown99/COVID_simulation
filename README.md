@@ -58,7 +58,7 @@ env = virl.Epidemic(stochastic=True) # False by default.
 
 ### Example Agent
 
-[notebooks/random_agent.ipynb](notebooks/random_agent.ipynb) illustrates a basic (random) agent interacting with the environment.
+[notebooks/random_agent.ipynb](notebooks/run_random.ipynb) illustrates a basic (random) agent interacting with the environment.
 
 ## Disclaimer
 
