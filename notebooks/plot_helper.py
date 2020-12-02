@@ -31,3 +31,4 @@ def plot(state,agent, total_rewards, rewards,title):
     axes[3].set_ylabel('total reward r(t)')
     axes[3].title.set_text('Final Episode reward')
     
+    fig.suptitle(title) 

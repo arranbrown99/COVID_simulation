@@ -103,10 +103,10 @@ class QLearningAgent:
             rewards, exploited_q_table, states= self.run_episode(epislon)
             total_reward = np.sum(rewards)
 
-#             if episode % self.print_out_every_x_episodes == 0:
-#                 print("Episode number: " + str(episode) + ". Total reward in episode: " + str(total_reward) + ". Episode executed with epsilon = " + str(epislon))
-#                 print("Average total reward in last " + str(self.print_out_every_x_episodes) + " episodes: " + str(np.mean(all_rewards[-self.print_out_every_x_episodes:])))
-#                 print("Average number of times we exploited q table in last " + str(self.print_out_every_x_episodes) + " episodes: " + str(np.mean(all_q_table_exploits[-self.print_out_every_x_episodes:])))
+            if episode % 300 == 0:
+                print("Episode number: " + str(episode) + ". Total reward in episode: " + str(total_reward) + ". Episode executed with epsilon = " + str(epislon))
+                print("Average total reward in last " + str(self.print_out_every_x_episodes) + " episodes: " + str(np.mean(all_rewards[-self.print_out_every_x_episodes:])))
+                print("Average number of times we exploited q table in last " + str(self.print_out_every_x_episodes) + " episodes: " + str(np.mean(all_q_table_exploits[-self.print_out_every_x_episodes:])))
 #                 print("-----")
             all_total_rewards.append(total_reward)
             all_rewards.append(rewards)
@@ -114,10 +114,10 @@ class QLearningAgent:
             epislon -= self.decrease_factor #hyperparameter
         
         #graph with orange smoothed reward
-        window_size = int(self.episodes/10)
-        smoothed_rewards = pd.Series(all_total_rewards).rolling(window_size, min_periods=window_size).mean() 
-        this_smoothed_reward = smoothed_rewards.values[-1]
-        smooth_plot(all_total_rewards, smoothed_rewards,title)
+#         window_size = int(self.episodes/10)
+#         smoothed_rewards = pd.Series(all_total_rewards).rolling(window_size, min_periods=window_size).mean() 
+#         this_smoothed_reward = smoothed_rewards.values[-1]
+#         smooth_plot(all_total_rewards, smoothed_rewards,title)
         return states,all_rewards, all_total_rewards
     
     def run_episode(self,epislon):
