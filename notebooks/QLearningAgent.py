@@ -1,3 +1,12 @@
+import os
+import numpy as np
+os.chdir('..')
+import virl
+from matplotlib import pyplot as plt
+
+import pandas as pd
+from IPython import display
+
 class QTable:
     def __init__(self, initial, num_of_actions):
         self.q_table = {}

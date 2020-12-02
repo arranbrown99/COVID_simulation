@@ -1,3 +1,9 @@
+import os
+import numpy as np
+os.chdir('..')
+import virl
+from matplotlib import pyplot as plt
+
 class Tabular_Policy_Agent:
         
     def __init__(self,env):
