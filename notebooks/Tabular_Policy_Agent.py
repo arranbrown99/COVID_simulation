@@ -4,6 +4,19 @@ os.chdir('..')
 import virl
 from matplotlib import pyplot as plt
 
+import pandas as pd
+from IPython import display
+
+def smooth_plot(all_rewards, smoothed_rewards,title): 
+    plt.figure(2, figsize=(12, 6))
+    plt.clf()
+    plt.title(title)
+    plt.xlabel("Epsiode") 
+    plt.ylabel("Total Reward")
+    plt.plot(all_rewards, '--', alpha=0.5) 
+    plt.plot(smoothed_rewards) 
+    plt.legend(["Rewards", "Rewards (Smoothed)"]) 
+
 class Tabular_Policy_Agent:
         
     def __init__(self,env):
