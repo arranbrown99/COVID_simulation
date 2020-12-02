@@ -5,6 +5,8 @@ from keras.optimizers import Adam
 from keras import backend as K
 
 from tensorflow import where as tf_where
+import os
+os.chdir('..')
 import virl
 
 def init_networks(input_layer_dim, output_layer_dim, learning_rate=0.001, nn_config=[24,24]):

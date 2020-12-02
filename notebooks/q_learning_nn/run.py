@@ -15,7 +15,7 @@ def plot(all_rewards, smoothed_rewards):
     plt.pause(0.0001)
     display.clear_output(wait=True)
 
-def qlearning_nn(agent, policy_network, target_network, num_episodes, window_size, strategy=None, memory=None, ):
+def qlearning_nn(agent, policy_network, target_network, num_episodes, window_size=10, strategy=None, memory=None):
 
     if agent.is_learning() and memory is None:
         print("Agent is learning, function requires memory")
