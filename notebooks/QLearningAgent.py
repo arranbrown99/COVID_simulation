@@ -7,6 +7,18 @@ from matplotlib import pyplot as plt
 import pandas as pd
 from IPython import display
 
+
+def smooth_plot(all_rewards, smoothed_rewards,title): 
+    plt.figure(2, figsize=(12, 6))
+    plt.clf()
+    plt.title(title)
+    plt.xlabel("Epsiode") 
+    plt.ylabel("Total Reward")
+    plt.plot(all_rewards, '--', alpha=0.5) 
+    plt.plot(smoothed_rewards) 
+    plt.legend(["Rewards", "Rewards (Smoothed)"]) 
+    
+
 class QTable:
     def __init__(self, initial, num_of_actions):
         self.q_table = {}
@@ -37,7 +49,7 @@ class QLearningAgent:
         # hyper parameters
         self.discount = 0.99 # gamma
         self.learning_rate = 0.25 # step size, alpha
-        self.episodes = 1500
+        self.episodes = 1000
         self.print_out_every_x_episodes = int(self.episodes/50)
         
         # hyper parameters for epsilon

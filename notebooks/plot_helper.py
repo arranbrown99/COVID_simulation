@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+import numpy as np
 
 def plot(state,agent, total_rewards, rewards,title):
     fig, axes = plt.subplots(1, 4, figsize=(40, 16))

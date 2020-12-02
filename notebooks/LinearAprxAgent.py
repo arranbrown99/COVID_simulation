@@ -28,7 +28,7 @@ def smooth_plot(all_rewards, smoothed_rewards,title):
 
 
 class LinearAprxAgent:
-    def create_policy(self,func_approximator, epsilon):
+    def create_policy(self,func_approximator, epsilon=0):
         # from lab 8
         def policy_fn(state):
             """
@@ -55,12 +55,16 @@ class LinearAprxAgent:
     def __init__(self,env):
         
         #RBF Hyper parameters
-        SGD_learning_rate = "optimal" #‘constant’, ‘optimal’, ‘invscaling’, ‘adaptive’
-        tol = 1e-5 #The stopping criterion
-        SGD_max_iter = 1e4
+        self.SGD_learning_rate = "optimal" #‘constant’, ‘optimal’, ‘invscaling’, ‘adaptive’
+        self.tol = 1e-5 #The stopping criterion
+        self.SGD_max_iter = 1e4
         
         
-        self.func_approximator =  SGDRegressor(learning_rate=SGD_learning_rate, tol=tol, max_iter=SGD_max_iter, loss='huber')
+        self.func_approximator =  SGDRegressor(learning_rate=self.SGD_learning_rate, 
+                                               tol=self.tol,
+                                               max_iter=self.SGD_max_iter,
+                                               loss='huber')
+        
         self.feature_transformer =  sklearn.pipeline.FeatureUnion([
                 ("rbf1", RBFSampler(gamma=12.8, n_components=50)),
                 ("rbf2", RBFSampler(gamma=6.4, n_components=50)),
@@ -78,7 +82,7 @@ class LinearAprxAgent:
         #function which is the learned function
         self.policy = self.create_policy(self.func_approximator,1)
         
-        self.episodes = 500
+        self.episodes = 200
         self.print_out_every_x_episodes = int(self.episodes/50)
         self.times_exploited = 0
         
@@ -89,9 +93,18 @@ class LinearAprxAgent:
         
     def train(self):
         states,all_rewards, all_total_rewards = self.run_all_episodes("Training")
-        return states,all_rewards, all_total_rewards
+        state_transformed = self.feature_transformer.transform([states[-1]])
+        
+        q_values = self.func_approximator.predict(state_transformed)
+        return states,all_rewards, all_total_rewards, self.func_approximator, state_transformed, q_values
+    
+    def evaluate(self,intercept,coeff,states_transformed,q_values,episodes=100):
+        self.func_approximator =  SGDRegressor(learning_rate=self.SGD_learning_rate,
+                                               tol=self.tol,
+                                               max_iter=self.SGD_max_iter,
+                                               loss='huber')
+        self.func_approximator.fit(states_transformed,q_values, coef_init=coeff,intercept_init=intercept)
 
-    def evaluate(self,episodes=100):
         self.episodes = episodes
         self.epsilon = -1000
         states,all_rewards, all_total_rewards = self.run_all_episodes("Evaluation")
@@ -180,7 +193,7 @@ class LinearAprxAgent:
         
         
         self.func_approximator.fit(states_transformed,rewards)
-        self.policy = self.create_policy(self.func_approximator,epsilon)
+        self.policy = self.create_policy(self.func_approximator,0)
                                                        
         
     def get_action(self,state):
@@ -196,3 +209,9 @@ class LinearAprxAgent:
     
     def get_chart_title(self):
         return "Action = " + action_text
+    
+    def get_weights(self):
+        return self.func_approximator.get_params()
+    
+    def set_params(self,coef,intercept):
+        self.func_approximator.set_params(weights.get_items())
