@@ -5,7 +5,7 @@ class DeterministicAgent:
         self.action = action
         self.env = env
         self.action_text = action_text
-        print("Agent has " + str(self.num_of_actions) + " actions and will always choose action " + str(action) + ": " + action_text)
+        #print("Agent has " + str(self.num_of_actions) + " actions and will always choose action " + str(action) + ": " + action_text)
         
     def get_action(self):
         return self.action

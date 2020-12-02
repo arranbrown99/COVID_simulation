@@ -17,7 +17,7 @@ def run(agent):
     return (states, rewards)
 
 
-def plot(agent, states, rewards):
+def plot(agent, states, rewards, title=""):
     fig, axes = plt.subplots(1, 2, figsize=(20, 8))
     labels = ['s[0]: susceptibles', 's[1]: infectious', 's[2]: quarantined', 's[3]: recovereds']
     states = np.array(states)
@@ -25,7 +25,7 @@ def plot(agent, states, rewards):
         axes[0].plot(states[:,i], label=labels[i])
     axes[0].set_xlabel('weeks since start of epidemic')
     axes[0].set_ylabel('State s(t)')
-    axes[0].set_title(agent.get_chart_title())
+    axes[0].set_title(agent.get_chart_title() + str(title))
     axes[0].legend()
     axes[1].plot(rewards);
     axes[1].set_title("Total reward = " + str(np.sum(rewards)))

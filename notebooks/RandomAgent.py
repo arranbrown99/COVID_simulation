@@ -6,7 +6,7 @@ class RandomAgent:
         self.num_of_actions = env.action_space.n
         self.env = env
         self.action_text = action_text
-        print("Agent has " + str(self.num_of_actions) + " actions and will randomly select one at each step")
+        #print("Agent has " + str(self.num_of_actions) + " actions and will randomly select one at each step")
         
     def get_action(self):
         self.action = np.random.choice(self.num_of_actions)
