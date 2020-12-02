@@ -29,7 +29,7 @@ class QLearningAgent:
         # hyper parameters
         self.discount = 0.99 # gamma
         self.learning_rate = 0.25 # step size, alpha
-        self.episodes = 101
+        self.episodes = 2000
         self.print_out_every_x_episodes = print_out_every_x_episodes
         
         # hyper parameters for epsilon
