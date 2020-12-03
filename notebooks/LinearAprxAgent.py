@@ -93,17 +93,17 @@ class LinearAprxAgent:
         
     def train(self):
         states,all_rewards, all_total_rewards = self.run_all_episodes("Training")
-        state_transformed = self.feature_transformer.transform([states[-1]])
+        state_transformed = self.feature_transformer.transform(states)
         
         q_values = self.func_approximator.predict(state_transformed)
         return states,all_rewards, all_total_rewards, self.func_approximator, state_transformed, q_values
     
-    def evaluate(self,intercept,coeff,states_transformed,q_values,episodes=100):
+    def evaluate(self,intercept,coeff,states_transformed,q_values,last_reward,episodes=100):
         self.func_approximator =  SGDRegressor(learning_rate=self.SGD_learning_rate,
                                                tol=self.tol,
                                                max_iter=self.SGD_max_iter,
                                                loss='huber')
-        self.func_approximator.fit(states_transformed,q_values, coef_init=coeff,intercept_init=intercept)
+        self.func_approximator.fit(states_transformed,last_reward,coef_init=coeff,intercept_init=intercept)
 
         self.episodes = episodes
         self.epsilon = -1000
