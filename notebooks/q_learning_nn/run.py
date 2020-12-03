@@ -71,10 +71,10 @@ def qlearning_nn(agent, policy_network, target_network, num_episodes, window_siz
                         
                 if num_episodes == 1:
                     print("Evaluation reward " + str(total_reward))
-                else:
+                elif agent.is_learning():
                     print("Episode = " + str(episode) + ". Num Exploits = " + str(exploits) + ". Total Reward = " + str(total_reward)
                           + ". Moving Average Reward = " + str(this_smoothed_reward))
-                    plot(all_rewards, smoothed_rewards)
+                    #plot(all_rewards, smoothed_rewards)
 
 
                 
