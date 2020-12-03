@@ -5,9 +5,6 @@ from keras.optimizers import Adam
 from keras import backend as K
 
 from tensorflow import where as tf_where
-import os
-os.chdir('..')
-import virl
 
 def init_networks(input_layer_dim, output_layer_dim, learning_rate=0.001, nn_config=[24,24]):
     # Init the two networks
@@ -16,7 +13,7 @@ def init_networks(input_layer_dim, output_layer_dim, learning_rate=0.001, nn_con
     target_network.model.set_weights(policy_network.model.get_weights())
     return (policy_network, target_network)
 
-def load_trained_network(filename):
+def load_trained_network(filename, virl):
     env = virl.Epidemic(stochastic=False, noisy=False)
     n_actions = env.action_space.n
     d_states = env.observation_space.shape[0]
