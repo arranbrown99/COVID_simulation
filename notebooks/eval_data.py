@@ -90,3 +90,48 @@ class EvalData():
             problem_id = str(k)
             reward = np.mean(np.array(v))
             print("ID: " + problem_id + " Reward: " + str(reward))
+            
+def create_full_table_for_deterministic(all_eval_data, stochastic, noisy):
+    fig = plt.figure(dpi=150)
+    ax = fig.add_subplot(1,1,1)
+    ax.set_title("Total Reward for each Deterministic Action")
+    
+    no_itervention_values = []
+    for v in all_eval_data[0].rewards.values():
+        no_itervention_values.append((np.mean(np.array(v))))
+
+    full_lockdown_values = []
+    for v in all_eval_data[1].rewards.values():
+        full_lockdown_values.append((np.mean(np.array(v))))
+
+    track_trace_values = []
+    for v in all_eval_data[2].rewards.values():
+        track_trace_values.append((np.mean(np.array(v))))
+
+    social_distancing_values = []
+    for v in all_eval_data[3].rewards.values():
+        social_distancing_values.append((np.mean(np.array(v))))
+
+    rows = []
+    for i in range(10):        
+        rows.append([i, no_itervention_values[i], full_lockdown_values[i], track_trace_values[i], social_distancing_values[i]])
+
+    rows = [[row[0], round(row[1], 2), round(row[2], 2), round(row[3], 2), round(row[4], 2)] for row in rows]
+    table = ax.table(cellText=rows, colLabels=["Problem Id",
+                                               "No Intervention",
+                                               "Full Lockdown",
+                                               "Track & Trace", 
+                                               "Social Distancing"],
+                     cellLoc="center", loc='center')
+    table.set_fontsize(14)
+    table.scale(1,1.6)
+    ax.axis('off')
+
+    filename = "eval_output" + os.path.sep + "Deterministic"
+    if stochastic:
+        filename += " Stochastic"
+    if noisy:
+        filename += " Noisy"
+    filename += " Table.png"
+    plt.savefig(filename)
+    print("Saved table at " + filename)
