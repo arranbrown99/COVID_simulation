@@ -7,10 +7,7 @@ from sklearn.kernel_approximation import RBFSampler # this is the RBF function t
 import pandas as pd
 #import display, HTML
 from IPython import display
-import os
 import numpy as np
-os.chdir('..')
-import virl
 from matplotlib import pyplot as plt
 
 
@@ -83,13 +80,13 @@ class LinearAprxAgent:
         self.policy = self.create_policy(self.func_approximator,1)
         
         self.episodes = 200
-        self.print_out_every_x_episodes = int(self.episodes/50)
+#         self.print_out_every_x_episodes = int(self.episodes/50)
         self.times_exploited = 0
         
         # hyper parameters for epsilon explore
         self.initial_epsilon = 1 # initial
         self.decrease_factor = (1/self.episodes)/1.25 # epsilon
-        print("Decrease Factor: " + str(self.decrease_factor))
+#         print("Decrease Factor: " + str(self.decrease_factor))
         
     def train(self):
         states,all_rewards, all_total_rewards = self.run_all_episodes("Training")
@@ -107,11 +104,11 @@ class LinearAprxAgent:
 
         self.episodes = episodes
         self.epsilon = -1000
-        states,all_rewards, all_total_rewards = self.run_all_episodes("Evaluation")
+        states,all_rewards, all_total_rewards = self.run_all_episodes("Evaluation", evaluate=True)
         return states,all_rewards, all_total_rewards
         
     
-    def run_all_episodes(self,title):
+    def run_all_episodes(self,title, evaluate=False):
         all_total_rewards = []
         all_rewards = []
         epsilon = self.initial_epsilon # at the start only explore
@@ -119,7 +116,7 @@ class LinearAprxAgent:
         
         power = 1
         for episode in range(1, self.episodes + 1):
-            states,rewards = self.run_episode(epsilon)
+            states,rewards = self.run_episode(epsilon, evaluate)
             total_reward = np.sum(rewards)
             
             
@@ -131,14 +128,16 @@ class LinearAprxAgent:
             self.times_exploited = 0
             all_rewards.append(rewards)
             all_total_rewards.append(total_reward)
-            epsilon = self.decrease_epsilon(epsilon, power)
+            if not evaluate:
+                epsilon = self.decrease_epsilon(epsilon, power)
             power += 0.10
         
         #graph with orange smoothed reward
-        window_size = int(self.episodes/10)
-        smoothed_rewards = pd.Series(all_total_rewards).rolling(window_size, min_periods=window_size).mean() 
-        this_smoothed_reward = smoothed_rewards.values[-1]
-        smooth_plot(all_total_rewards, smoothed_rewards,title)
+        if not evaluate:
+            window_size = int(self.episodes/10)
+            smoothed_rewards = pd.Series(all_total_rewards).rolling(window_size, min_periods=window_size).mean() 
+            this_smoothed_reward = smoothed_rewards.values[-1]
+            smooth_plot(all_total_rewards, smoothed_rewards,title)
         return states,all_rewards, all_total_rewards
     
     
@@ -147,7 +146,7 @@ class LinearAprxAgent:
         decrease = 0.005
         return epsilon * ((1 - decrease) ** power)
     
-    def run_episode(self,epsilon):
+    def run_episode(self,epsilon, evaluate=False):
         rewards = []
         states = []
         actions = []
@@ -156,14 +155,11 @@ class LinearAprxAgent:
         state = self.env.reset()
         states.append(state)
         
-      
-        
         while not done:
             random_number = np.random.random()
             if random_number < epsilon:
                 #explore
                 action = np.random.choice(self.num_of_actions)
-                
             else:
                 #exploit
                 action = self.get_action(state)
@@ -176,10 +172,9 @@ class LinearAprxAgent:
             actions.append(action)    
             rewards.append(reward)
             
-            if epsilon != -1000:
+            if not evaluate:
                 #update policy function
                 self.update(states[1:],rewards, epsilon)
-        
             
             state = new_state
       
