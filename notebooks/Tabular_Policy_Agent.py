@@ -1,11 +1,10 @@
-import os
 import numpy as np
-os.chdir('..')
-import virl
 from matplotlib import pyplot as plt
 
 import pandas as pd
 from IPython import display
+
+import json
 
 def smooth_plot(all_rewards, smoothed_rewards,title): 
     plt.figure(2, figsize=(12, 6))
@@ -39,7 +38,33 @@ class Tabular_Policy_Agent:
         # hyper parameters for epsilon explore
         self.initial_epsilon = 1 # initial
         self.decrease_factor = (1/self.episodes)/1.25 # epsilon
-        print("Decrease Factor: " + str(self.decrease_factor))
+        
+        
+    
+    def load_raw_table_from_file(self,filename):
+        new_table = None
+        with open(filename, "r") as file:
+            contents = file.read()
+            table = json.loads(contents)
+            new_table = {}
+            for key, value in table.items():
+                # Unpacking the json is strictly dependent on saving the json
+                # If you update this logic, you must update save_raw_table_to_file
+                key_as_tuple = tuple(map(int, key.split(', '))) 
+                new_table[key_as_tuple] = value
+        self.policy_table = new_table
+        
+    def save_raw_table_to_file(self, filename):
+        with open(filename, "w") as file:
+            new_table = {}
+            for key, value in self.policy_table.items():
+                # Loading the json determines how we unpacking the json later
+                # If you update this logic, you must update load_raw_table_from_file
+                new_key = str(key).strip()[1:-1]
+                new_table[new_key] = value
+            file.write(json.dumps(new_table))
+            return True
+        return False
         
     def continous_to_discrete(self,continous_state):
         bins = np.linspace(self.lowest,self.highest,num=self.number_bins)
@@ -51,7 +76,8 @@ class Tabular_Policy_Agent:
         return states,all_rewards, all_total_rewards
 
     
-    def evaluate(self,episodes=100):
+    def evaluate(self,filename,episodes=100):
+        self.load_raw_table_from_file(filename)
         self.episodes = episodes
         self.epsilon = -1000
         states,all_rewards, all_total_rewards = self.run_all_episodes("Evaluation")
