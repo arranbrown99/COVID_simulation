@@ -2,19 +2,26 @@ import virl
 import numpy as np
 from matplotlib import pyplot as plt
 
-def run(agent):
+def run(agent, episodes):
+    total_rewards = []
     env = agent.get_env()
-    states = []
-    rewards = []
-    done = False
+    
+    for i in range(episodes):
 
-    s = env.reset()
-    states.append(s)
-    while not done:
-        s, r, done, i = env.step(action=agent.get_action()) # deterministic agent
+        states = []
+        rewards = []
+        done = False
+
+        s = env.reset()
         states.append(s)
-        rewards.append(r)
-    return (states, rewards)
+        while not done:
+            s, r, done, i = env.step(action=agent.get_action()) # random or deterministic
+            states.append(s)
+            rewards.append(r)
+            
+        total_reward = np.sum(np.array(rewards))
+        total_rewards.append(total_reward)
+    return total_rewards
 
 
 def plot(agent, states, rewards, title=""):
