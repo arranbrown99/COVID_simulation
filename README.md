@@ -1,3 +1,9 @@
+# AI Coursework 
+Using VIRL in order to write a learning agent, an AI which can choose the best actions each week of a COVID-19 simulation.
+Various agents wer implemented including Q-learning, and Q-learning with a neural network for parameter optimistion as well as policy search.
+
+Below is the README.md for VIRL.
+
 # ViRL
 
 ViRL is an Epidemics Reinforcement Learning Environment. Agents are tasked with controlling the spread of a virus with one of four non-medical policy interventions: 
